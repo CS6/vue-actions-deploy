@@ -8,9 +8,9 @@ on:
   push:
     branches: 
       # Push events on  branch
-      #- master ＃當master分支按下的時候，我們部署到生產服務器
+      - master  #當master分支按下的時候，我們部署到生產服務器
       - develop  #當開發分支推進的時候，我們部署到測試服務器
-      #-test ＃當測試分支推進的時候，我們部署到測試服務器
+      - test  #當測試分支推進的時候，我們部署到測試服務器
   pull_request:
     branches: [ develop ]
 
@@ -27,6 +27,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: buildAndDeploy
+      if: github.ref == 'refs/heads/develop' #对分支进行检测
       uses: JamesIves/github-pages-deploy-action@master 
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # 使用建立的secret
@@ -34,3 +35,23 @@ jobs:
         BRANCH: gh-pages # 存放git-page的分支名称
         FOLDER: dist # 存放build完的目录
         BUILD_SCRIPT: yarn  && yarn build # 執行的指令
+
+#     - name: deploy file to test server
+#       if: github.ref == 'refs/heads/test' #对分支进行检测
+#       uses: wlixcc/SFTP-Deploy-Action@v1.0
+#       with:
+#           username: 'username'
+#           server: '${{ secrets.TEST_SERVER_IP }}' #测试服务器地址
+#           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           local_path: './build/*'
+#           remote_path: '/var/www/app' #测试服务器部署路径
+      
+#     - name: deploy file to prod server
+#       if: github.ref == 'refs/heads/master' #对分支进行检测
+#       uses: wlixcc/SFTP-Deploy-Action@v1.0
+#       with:
+#           username: 'username'
+#           server: '${{ secrets.SERVER_IP }}' #正式服务器地址
+#           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           local_path: './build/*'
+#           remote_path: '/var/www/app' #服务器部署路径
