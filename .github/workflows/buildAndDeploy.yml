@@ -30,7 +30,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@master 
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # 使用建立的secret
+        BASE_BRANCH	:  develop
         BRANCH: gh-pages # 存放git-page的分支名称
         FOLDER: dist # 存放build完的目录
         BUILD_SCRIPT: yarn  && yarn build # 執行的指令
-        BASE_BRANCH	:  develop
